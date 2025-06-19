@@ -166,6 +166,14 @@ export default function PSO() {
           </button>
           
           <button 
+            onClick={updateParticles}
+            disabled={isRunning}
+            className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 disabled:bg-gray-400 disabled:cursor-not-allowed"
+          >
+            Step
+          </button>
+          
+          <button 
             onClick={initParticles}
             className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600"
           >
