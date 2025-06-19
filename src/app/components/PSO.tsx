@@ -17,7 +17,7 @@ export default function PSO() {
   const [particles, setParticles] = useState<Particle[]>([])
   const [globalBest, setGlobalBest] = useState({ x: 0, y: 0, fitness: Infinity })
   const [iteration, setIteration] = useState(0)
-  const [functionType, setFunctionType] = useState<'sphere' | 'rastrigin' | 'ackley'>('sphere')
+  const [functionType, setFunctionType] = useState<'sphere' | 'rastrigin' | 'ackley' | 'rosenbrock' | 'himmelblau' | 'beale'>('sphere')
 
   // Objective functions
   const fitness = (x: number, y: number) => {
@@ -28,6 +28,12 @@ export default function PSO() {
         return 20 + (x * x - 10 * Math.cos(2 * Math.PI * x)) + (y * y - 10 * Math.cos(2 * Math.PI * y))
       case 'ackley':
         return -20 * Math.exp(-0.2 * Math.sqrt(0.5 * (x * x + y * y))) - Math.exp(0.5 * (Math.cos(2 * Math.PI * x) + Math.cos(2 * Math.PI * y))) + Math.E + 20
+      case 'rosenbrock':
+        return 100 * (y - x * x) * (y - x * x) + (1 - x) * (1 - x)
+      case 'himmelblau':
+        return (x * x + y - 11) * (x * x + y - 11) + (x + y * y - 7) * (x + y * y - 7)
+      case 'beale':
+        return Math.pow(1.5 - x + x * y, 2) + Math.pow(2.25 - x + x * y * y, 2) + Math.pow(2.625 - x + x * y * y * y, 2)
       default:
         return x * x + y * y
     }
@@ -175,7 +181,7 @@ export default function PSO() {
             <select 
               value={functionType} 
               onChange={(e) => {
-                setFunctionType(e.target.value as 'sphere' | 'rastrigin' | 'ackley')
+                setFunctionType(e.target.value as 'sphere' | 'rastrigin' | 'ackley' | 'rosenbrock' | 'himmelblau' | 'beale')
                 initParticles()
               }}
               className="px-3 py-2 border border-gray-300 rounded"
@@ -183,6 +189,9 @@ export default function PSO() {
               <option value="sphere">Sphere</option>
               <option value="rastrigin">Rastrigin</option>
               <option value="ackley">Ackley</option>
+              <option value="rosenbrock">Rosenbrock</option>
+              <option value="himmelblau">Himmelblau</option>
+              <option value="beale">Beale</option>
             </select>
           </div>
           
