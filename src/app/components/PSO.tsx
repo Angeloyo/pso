@@ -19,6 +19,29 @@ export default function PSO() {
   const [iteration, setIteration] = useState(0)
   const [functionType, setFunctionType] = useState<'sphere' | 'rastrigin' | 'ackley' | 'rosenbrock' | 'himmelblau' | 'beale'>('sphere')
 
+  // Get global optimum position for each function
+  const getGlobalOptimum = () => {
+    switch (functionType) {
+      case 'sphere':
+      case 'rastrigin':
+      case 'ackley':
+        return [{ x: 0, y: 0 }]
+      case 'rosenbrock':
+        return [{ x: 1, y: 1 }]
+      case 'himmelblau':
+        return [
+          { x: 3, y: 2 },
+          { x: -2.805118, y: 3.131312 },
+          { x: -3.779310, y: -3.283186 },
+          { x: 3.584428, y: -1.848126 }
+        ]
+      case 'beale':
+        return [{ x: 3, y: 0.5 }]
+      default:
+        return [{ x: 0, y: 0 }]
+    }
+  }
+
   // Objective functions
   const fitness = (x: number, y: number) => {
     switch (functionType) {
@@ -127,14 +150,22 @@ export default function PSO() {
     }
     ctx.putImageData(imageData, 0, 0)
     
-    // Draw target (global optimum)
-    const targetX = 200 // Center of canvas (0,0 in world coords)
-    const targetY = 200
+    // Draw target(s) (global optimum)
+    const optimums = getGlobalOptimum()
     ctx.strokeStyle = '#10b981'
     ctx.lineWidth = 3
-    ctx.beginPath()
-    ctx.arc(targetX, targetY, 12, 0, Math.PI * 2)
-    ctx.stroke()
+    
+    optimums.forEach(opt => {
+      const targetX = (opt.x + 5) * 40
+      const targetY = (opt.y + 5) * 40
+      
+      // Only draw if within canvas bounds
+      if (targetX >= 0 && targetX <= 400 && targetY >= 0 && targetY <= 400) {
+        ctx.beginPath()
+        ctx.arc(targetX, targetY, 12, 0, Math.PI * 2)
+        ctx.stroke()
+      }
+    })
     
     // Draw particles
     particles.forEach(p => {
