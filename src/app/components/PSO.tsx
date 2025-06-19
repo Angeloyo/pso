@@ -211,7 +211,6 @@ export default function PSO() {
       </div>
       
       <div className="flex flex-col gap-4">
-        <h2 className="text-xl font-bold">PSO Visualization</h2>
         
         <div className="flex flex-col gap-4">
           <div>
