@@ -1,4 +1,5 @@
 import PSO from './components/PSO'
+import PSOExplanation from './components/PSOExplanation'
 
 export default function Home() {
   return (
@@ -10,6 +11,7 @@ export default function Home() {
         <div className="flex justify-center">
           <PSO />
         </div>
+        <PSOExplanation />
       </div>
     </div>
   )
