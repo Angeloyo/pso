@@ -17,9 +17,21 @@ export default function PSO() {
   const [particles, setParticles] = useState<Particle[]>([])
   const [globalBest, setGlobalBest] = useState({ x: 0, y: 0, fitness: Infinity })
   const [iteration, setIteration] = useState(0)
+  const [functionType, setFunctionType] = useState<'sphere' | 'rastrigin' | 'ackley'>('sphere')
 
-  // Sphere function (simple)
-  const fitness = (x: number, y: number) => x * x + y * y
+  // Objective functions
+  const fitness = (x: number, y: number) => {
+    switch (functionType) {
+      case 'sphere':
+        return x * x + y * y
+      case 'rastrigin':
+        return 20 + (x * x - 10 * Math.cos(2 * Math.PI * x)) + (y * y - 10 * Math.cos(2 * Math.PI * y))
+      case 'ackley':
+        return -20 * Math.exp(-0.2 * Math.sqrt(0.5 * (x * x + y * y))) - Math.exp(0.5 * (Math.cos(2 * Math.PI * x) + Math.cos(2 * Math.PI * y))) + Math.E + 20
+      default:
+        return x * x + y * y
+    }
+  }
 
   // Initialize particles
   const initParticles = useCallback(() => {
@@ -157,28 +169,46 @@ export default function PSO() {
       <div className="flex flex-col gap-4">
         <h2 className="text-xl font-bold">PSO Visualization</h2>
         
-        <div className="flex gap-2">
-          <button 
-            onClick={() => setIsRunning(!isRunning)}
-            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-          >
-            {isRunning ? 'Pause' : 'Play'}
-          </button>
+        <div className="flex flex-col gap-4">
+          <div>
+            <label className="block text-sm font-medium mb-2">Function:</label>
+            <select 
+              value={functionType} 
+              onChange={(e) => {
+                setFunctionType(e.target.value as 'sphere' | 'rastrigin' | 'ackley')
+                initParticles()
+              }}
+              className="px-3 py-2 border border-gray-300 rounded"
+            >
+              <option value="sphere">Sphere</option>
+              <option value="rastrigin">Rastrigin</option>
+              <option value="ackley">Ackley</option>
+            </select>
+          </div>
           
-          <button 
-            onClick={updateParticles}
-            disabled={isRunning}
-            className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 disabled:bg-gray-400 disabled:cursor-not-allowed"
-          >
-            Step
-          </button>
-          
-          <button 
-            onClick={initParticles}
-            className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600"
-          >
-            Reset
-          </button>
+          <div className="flex gap-2">
+            <button 
+              onClick={() => setIsRunning(!isRunning)}
+              className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+            >
+              {isRunning ? 'Pause' : 'Play'}
+            </button>
+            
+            <button 
+              onClick={updateParticles}
+              disabled={isRunning}
+              className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 disabled:bg-gray-400 disabled:cursor-not-allowed"
+            >
+              Step
+            </button>
+            
+            <button 
+              onClick={initParticles}
+              className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600"
+            >
+              Reset
+            </button>
+          </div>
         </div>
         
         <div className="text-sm">
