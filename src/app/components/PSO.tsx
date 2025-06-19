@@ -136,14 +136,14 @@ export default function PSO() {
     const ctx = canvas.getContext('2d')
     if (!ctx) return
     
-    ctx.clearRect(0, 0, 400, 400)
+    ctx.clearRect(0, 0, 500, 500)
     
     // Draw fitness landscape (heat map)
-    const imageData = ctx.createImageData(400, 400)
+    const imageData = ctx.createImageData(500, 500)
     for (let i = 0; i < imageData.data.length; i += 4) {
       const pixel = i / 4
-      const x = (pixel % 400) / 40 - 5  // Convert to world coordinates
-      const y = Math.floor(pixel / 400) / 40 - 5
+      const x = (pixel % 500) / 50 - 5  // Convert to world coordinates
+      const y = Math.floor(pixel / 500) / 50 - 5
       
       const f = fitness(x, y)
       const intensity = Math.max(0, Math.min(255, 255 - f * 10)) // Darker = higher fitness
@@ -161,11 +161,11 @@ export default function PSO() {
     ctx.lineWidth = 3
     
     optimums.forEach(opt => {
-      const targetX = (opt.x + 5) * 40
-      const targetY = (opt.y + 5) * 40
+      const targetX = (opt.x + 5) * 50
+      const targetY = (opt.y + 5) * 50
       
       // Only draw if within canvas bounds
-      if (targetX >= 0 && targetX <= 400 && targetY >= 0 && targetY <= 400) {
+      if (targetX >= 0 && targetX <= 500 && targetY >= 0 && targetY <= 500) {
         ctx.beginPath()
         ctx.arc(targetX, targetY, 12, 0, Math.PI * 2)
         ctx.stroke()
@@ -174,8 +174,8 @@ export default function PSO() {
     
     // Draw particles
     particles.forEach(p => {
-      const x = (p.x + 5) * 40
-      const y = (p.y + 5) * 40
+      const x = (p.x + 5) * 50
+      const y = (p.y + 5) * 50
       
       ctx.fillStyle = '#3b82f6'
       ctx.beginPath()
@@ -185,8 +185,8 @@ export default function PSO() {
     
     // Draw global best
     if (globalBest.fitness < Infinity) {
-      const x = (globalBest.x + 5) * 40
-      const y = (globalBest.y + 5) * 40
+      const x = (globalBest.x + 5) * 50
+      const y = (globalBest.y + 5) * 50
       
       ctx.fillStyle = '#ef4444'
       ctx.beginPath()
@@ -204,8 +204,8 @@ export default function PSO() {
       <div className="flex-shrink-0">
         <canvas 
           ref={canvasRef} 
-          width={400} 
-          height={400} 
+          width={500} 
+          height={500} 
           className="border border-gray-300 block"
         />
       </div>
