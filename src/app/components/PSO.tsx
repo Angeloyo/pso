@@ -18,6 +18,11 @@ export default function PSO() {
   const [globalBest, setGlobalBest] = useState({ x: 0, y: 0, fitness: Infinity })
   const [iteration, setIteration] = useState(0)
   const [functionType, setFunctionType] = useState<'sphere' | 'rastrigin' | 'ackley' | 'rosenbrock' | 'himmelblau' | 'beale'>('sphere')
+  const [numParticles, setNumParticles] = useState(20)
+  const [inertia, setInertia] = useState(0.5)
+  const [cognitive, setCognitive] = useState(1.5)
+  const [social, setSocial] = useState(1.5)
+  const [speed, setSpeed] = useState(100)
 
   // Get global optimum position for each function
   const getGlobalOptimum = () => {
@@ -65,7 +70,7 @@ export default function PSO() {
   // Initialize particles
   const initParticles = useCallback(() => {
     const newParticles: Particle[] = []
-    for (let i = 0; i < 20; i++) {
+    for (let i = 0; i < numParticles; i++) {
       const x = (Math.random() - 0.5) * 10
       const y = (Math.random() - 0.5) * 10
       const f = fitness(x, y)
@@ -77,7 +82,7 @@ export default function PSO() {
     setParticles(newParticles)
     setGlobalBest({ x: 0, y: 0, fitness: Infinity })
     setIteration(0)
-  }, [])
+  }, [numParticles, functionType])
 
   // PSO update
   const updateParticles = useCallback(() => {
@@ -86,7 +91,7 @@ export default function PSO() {
       
       const updated = prev.map(p => {
         // Update velocity
-        const w = 0.5, c1 = 1.5, c2 = 1.5
+        const w = inertia, c1 = cognitive, c2 = social
         const r1 = Math.random(), r2 = Math.random()
         
         const vx = w * p.vx + c1 * r1 * (p.bestX - p.x) + c2 * r2 * (newGlobalBest.x - p.x)
@@ -119,9 +124,9 @@ export default function PSO() {
   // Animation loop
   useEffect(() => {
     if (!isRunning) return
-    const interval = setInterval(updateParticles, 100)
+    const interval = setInterval(updateParticles, speed)
     return () => clearInterval(interval)
-  }, [isRunning, updateParticles])
+  }, [isRunning, updateParticles, speed])
 
   // Draw
   useEffect(() => {
@@ -195,13 +200,15 @@ export default function PSO() {
   }, [initParticles])
 
   return (
-    <div className="flex gap-8">
-      <canvas 
-        ref={canvasRef} 
-        width={400} 
-        height={400} 
-        className="border border-gray-300"
-      />
+    <div className="flex gap-8 items-start">
+      <div className="flex-shrink-0">
+        <canvas 
+          ref={canvasRef} 
+          width={400} 
+          height={400} 
+          className="border border-gray-300 block"
+        />
+      </div>
       
       <div className="flex flex-col gap-4">
         <h2 className="text-xl font-bold">PSO Visualization</h2>
@@ -224,6 +231,70 @@ export default function PSO() {
               <option value="himmelblau">Himmelblau</option>
               <option value="beale">Beale</option>
             </select>
+          </div>
+          
+          <div>
+            <label className="block text-sm font-medium mb-2">Particles: {numParticles}</label>
+            <input 
+              type="range" 
+              min="5" 
+              max="50" 
+              value={numParticles}
+              onChange={(e) => setNumParticles(Number(e.target.value))}
+              className="w-full"
+            />
+          </div>
+          
+          <div>
+            <label className="block text-sm font-medium mb-2">Inertia (w): {inertia}</label>
+            <input 
+              type="range" 
+              min="0" 
+              max="1" 
+              step="0.1" 
+              value={inertia}
+              onChange={(e) => setInertia(Number(e.target.value))}
+              className="w-full"
+            />
+          </div>
+          
+          <div>
+            <label className="block text-sm font-medium mb-2">Cognitive (c1): {cognitive}</label>
+            <input 
+              type="range" 
+              min="0" 
+              max="3" 
+              step="0.1" 
+              value={cognitive}
+              onChange={(e) => setCognitive(Number(e.target.value))}
+              className="w-full"
+            />
+          </div>
+          
+          <div>
+            <label className="block text-sm font-medium mb-2">Social (c2): {social}</label>
+            <input 
+              type="range" 
+              min="0" 
+              max="3" 
+              step="0.1" 
+              value={social}
+              onChange={(e) => setSocial(Number(e.target.value))}
+              className="w-full"
+            />
+          </div>
+          
+          <div>
+            <label className="block text-sm font-medium mb-2">Speed: {speed}ms</label>
+            <input 
+              type="range" 
+              min="50" 
+              max="500" 
+              step="50" 
+              value={speed}
+              onChange={(e) => setSpeed(Number(e.target.value))}
+              className="w-full"
+            />
           </div>
           
           <div className="flex gap-2">
