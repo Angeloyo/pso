@@ -92,6 +92,32 @@ export default function PSO() {
     
     ctx.clearRect(0, 0, 400, 400)
     
+    // Draw fitness landscape (heat map)
+    const imageData = ctx.createImageData(400, 400)
+    for (let i = 0; i < imageData.data.length; i += 4) {
+      const pixel = i / 4
+      const x = (pixel % 400) / 40 - 5  // Convert to world coordinates
+      const y = Math.floor(pixel / 400) / 40 - 5
+      
+      const f = fitness(x, y)
+      const intensity = Math.max(0, Math.min(255, 255 - f * 10)) // Darker = higher fitness
+      
+      imageData.data[i] = intensity     // Red
+      imageData.data[i + 1] = intensity // Green  
+      imageData.data[i + 2] = 255       // Blue
+      imageData.data[i + 3] = 50        // Alpha (transparency)
+    }
+    ctx.putImageData(imageData, 0, 0)
+    
+    // Draw target (global optimum)
+    const targetX = 200 // Center of canvas (0,0 in world coords)
+    const targetY = 200
+    ctx.strokeStyle = '#10b981'
+    ctx.lineWidth = 3
+    ctx.beginPath()
+    ctx.arc(targetX, targetY, 12, 0, Math.PI * 2)
+    ctx.stroke()
+    
     // Draw particles
     particles.forEach(p => {
       const x = (p.x + 5) * 40
