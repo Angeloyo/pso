@@ -200,17 +200,44 @@ export default function PSO() {
   }, [initParticles])
 
   return (
-    <div className="flex gap-8 items-start">
-      <div className="flex-shrink-0">
+    <div className="flex flex-col lg:flex-row gap-6 lg:gap-8 items-center lg:items-start">
+      <div className="flex flex-col gap-4 flex-shrink-0">
         <canvas 
           ref={canvasRef} 
           width={500} 
           height={500} 
-          className="border border-gray-300 block"
+          className="border border-gray-300 block w-full max-w-[500px] h-auto"
+          style={{ aspectRatio: '1/1' }}
         />
+        
+        {/* Mobile controls - right below canvas */}
+        <div className="flex flex-col sm:flex-row gap-2 lg:hidden">
+          <button 
+            onClick={() => setIsRunning(!isRunning)}
+            className="flex-1 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
+          >
+            {isRunning ? 'Pause' : 'Play'}
+          </button>
+          
+          <button 
+            onClick={updateParticles}
+            disabled={isRunning}
+            className="flex-1 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
+          >
+            Step
+          </button>
+          
+          <button 
+            onClick={initParticles}
+            className="flex-1 px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 transition-colors"
+          >
+            Reset
+          </button>
+        </div>
       </div>
       
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-4 w-full lg:w-auto lg:min-w-[300px]">
+        {/* <h2 className="text-lg lg:text-xl font-bold text-center lg:text-left">PSO Visualization</h2> */}
         
         <div className="flex flex-col gap-4">
           <div>
@@ -221,7 +248,7 @@ export default function PSO() {
                 setFunctionType(e.target.value as 'sphere' | 'rastrigin' | 'ackley' | 'rosenbrock' | 'himmelblau' | 'beale')
                 initParticles()
               }}
-              className="px-3 py-2 border border-gray-300 rounded"
+              className="w-full px-3 py-2 border border-gray-300 rounded"
             >
               <option value="sphere">Sphere</option>
               <option value="rastrigin">Rastrigin</option>
@@ -296,10 +323,11 @@ export default function PSO() {
             />
           </div>
           
-          <div className="flex gap-2">
+          {/* Desktop controls - in sidebar */}
+          <div className="hidden lg:flex flex-col sm:flex-row gap-2">
             <button 
               onClick={() => setIsRunning(!isRunning)}
-              className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+              className="flex-1 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
             >
               {isRunning ? 'Pause' : 'Play'}
             </button>
@@ -307,14 +335,14 @@ export default function PSO() {
             <button 
               onClick={updateParticles}
               disabled={isRunning}
-              className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 disabled:bg-gray-400 disabled:cursor-not-allowed"
+              className="flex-1 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
             >
               Step
             </button>
             
             <button 
               onClick={initParticles}
-              className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600"
+              className="flex-1 px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 transition-colors"
             >
               Reset
             </button>
