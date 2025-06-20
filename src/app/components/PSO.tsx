@@ -92,10 +92,10 @@ export default function PSO() {
       const updated = prev.map(p => {
         // Update velocity
         const w = inertia, c1 = cognitive, c2 = social
-        const r1 = Math.random(), r2 = Math.random()
+        const r1x = Math.random(), r1y = Math.random(), r2x = Math.random(), r2y = Math.random()
         
-        const vx = w * p.vx + c1 * r1 * (p.bestX - p.x) + c2 * r2 * (newGlobalBest.x - p.x)
-        const vy = w * p.vy + c1 * r1 * (p.bestY - p.y) + c2 * r2 * (newGlobalBest.y - p.y)
+        const vx = w * p.vx + c1 * r1x * (p.bestX - p.x) + c2 * r2x * (newGlobalBest.x - p.x)
+        const vy = w * p.vy + c1 * r1y * (p.bestY - p.y) + c2 * r2y * (newGlobalBest.y - p.y)
         
         // Update position
         const x = Math.max(-5, Math.min(5, p.x + vx))
